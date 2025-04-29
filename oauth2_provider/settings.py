@@ -264,6 +264,12 @@ DEFAULTS = {
     "OIDC_RP_INITIATED_LOGOUT_STRICT_REDIRECT_URIS": False,
     "OIDC_RP_INITIATED_LOGOUT_ACCEPT_EXPIRED_TOKENS": True,
     "OIDC_RP_INITIATED_LOGOUT_DELETE_TOKENS": True,
+    # ================================================
+    # Backchannel Logout
+    # ================================================
+    "OIDC_BACKCHANNEL_LOGOUT_ENABLED": False,
+    "OIDC_BACKCHANNEL_LOGOUT_HANDLER": "oauth2_provider.handlers.send_backchannel_logout_request",
+    "OIDC_BACKCHANNEL_LOGOUT_TIMEOUT": 5,
     # =====================================================================
     # Resource Server
     # =====================================================================
@@ -343,6 +349,7 @@ IMPORT_STRINGS = (
     "ALLOWED_ORIGIN_VALIDATOR",
     "CIMD_METADATA_FETCHER",
     "CIMD_REGISTRATION_PERMISSION_CLASSES",
+    "OIDC_BACKCHANNEL_LOGOUT_HANDLER",
 )
 
 

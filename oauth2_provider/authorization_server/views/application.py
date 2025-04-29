@@ -5,6 +5,7 @@ from django.views.generic import CreateView, DeleteView, DetailView, ListView, U
 
 from oauth2_provider.authorization_server.forms import ApplicationForm
 from oauth2_provider.models import get_application_model
+from oauth2_provider.settings import oauth2_settings
 
 
 APPLICATION_FIELDS = (
@@ -31,16 +32,24 @@ class ApplicationOwnerIsUserMixin(LoginRequiredMixin):
     def get_queryset(self):
         return get_application_model().objects.filter(user=self.request.user)
 
+    def get_form_class(self):
+        """
+        Returns the form class for the application model
+        """
+        base_fields = list(APPLICATION_FIELDS)
 
-class ApplicationRegistration(LoginRequiredMixin, CreateView):
+        if oauth2_settings.OIDC_BACKCHANNEL_LOGOUT_ENABLED:
+            base_fields.append("backchannel_logout_uri")
+
+        return modelform_factory(get_application_model(), form=ApplicationForm, fields=base_fields)
+
+
+class ApplicationRegistration(ApplicationOwnerIsUserMixin, CreateView):
     """
     View used to register a new Application for the request.user
     """
 
     template_name = "oauth2_provider/application_registration_form.html"
-
-    def get_form_class(self):
-        return modelform_factory(get_application_model(), form=ApplicationForm, fields=APPLICATION_FIELDS)
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -82,6 +91,3 @@ class ApplicationUpdate(ApplicationOwnerIsUserMixin, UpdateView):
 
     context_object_name = "application"
     template_name = "oauth2_provider/application_form.html"
-
-    def get_form_class(self):
-        return modelform_factory(get_application_model(), form=ApplicationForm, fields=APPLICATION_FIELDS)

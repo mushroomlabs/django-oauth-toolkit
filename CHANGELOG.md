@@ -767,6 +767,7 @@ steps for swapped models, but applications using the `HS256` signing algorithm n
 ### Added
 * #1637 Support for Django 6.0
 * #1642 Provide App Name and Scope in Device Confirmation View
+* #1545 Support for OIDC Back-Channel Logout
 
 ### Removed
 * #1636 Remove support for Python 3.8 and 3.9

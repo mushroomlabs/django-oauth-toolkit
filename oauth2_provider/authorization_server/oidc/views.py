@@ -113,6 +113,12 @@ class ConnectDiscoveryInfoView(ServerMetadataViewMixin, OIDCOnlyMixin, View):
             data["end_session_endpoint"] = self._get_endpoint_url(
                 request, "rp-initiated-logout", required=True
             )
+
+        if oauth2_settings.OIDC_BACKCHANNEL_LOGOUT_ENABLED:
+            data["backchannel_logout_supported"] = True
+            # We need to issue SID claims on tokens to support this.
+            data["backchannel_logout_session_supported"] = False
+
         response = JsonResponse(data)
         response["Access-Control-Allow-Origin"] = "*"
         return response
